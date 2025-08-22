@@ -688,133 +688,168 @@ class CodebaseCopier {
 
 // --- Extension Activation and Deactivation ---
 export function activate(context: vscode.ExtensionContext) {
-    // Instantiate the main logic class
-    const copier = new CodebaseCopier();
-
-    // Determine the workspace folder (or empty string if none open)
-    const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
-
-    // Create and register the Action Panel Provider for the sidebar
-    const actionPanelProvider = new ActionPanelViewProvider(context.extensionUri);
-    context.subscriptions.push(
-        vscode.window.registerWebviewViewProvider(
-            ActionPanelViewProvider.viewType,
-            actionPanelProvider
-        )
-    );
-
-    // Create and register the Tree Provider for the sidebar view
-    const treeProvider = new CodebaseTreeProvider(workspaceFolder, (root) => copier.getFilteredFiles(root));
+    console.log('Codebase Prompt Packer extension is now active!');
     
-    // Create the Tree View instance
-    const treeView = vscode.window.createTreeView('codebase-prompt-packer-view', {
-        treeDataProvider: treeProvider,
-        showCollapseAll: true,
-        canSelectMany: false,
-        manageCheckboxStateManually: true // <-- ensure manual checkbox management
-    });
+    try {
+        // Instantiate the main logic class
+        const copier = new CodebaseCopier();
 
-    // Register handler for checkbox state changes in the tree view
-    if (treeView.onDidChangeCheckboxState) {
+        // Determine the workspace folder (or empty string if none open)
+        const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
+
+        // Create and register the Action Panel Provider for the sidebar
+        const actionPanelProvider = new ActionPanelViewProvider(context.extensionUri);
         context.subscriptions.push(
-            treeView.onDidChangeCheckboxState((e) => treeProvider.handleCheckboxChange([e]))
+            vscode.window.registerWebviewViewProvider(
+                ActionPanelViewProvider.viewType,
+                actionPanelProvider
+            )
         );
-    }
 
-    // Set up callback to update stats in the action panel when selection changes
-    treeProvider.setPreviewUpdateCallback((selectedFiles, includeFullTree) => {
-        // Get file count from selected files
-        const fileCount = selectedFiles.length;
+        // Create and register the Tree Provider for the sidebar view
+        const treeProvider = new CodebaseTreeProvider(workspaceFolder, (root) => copier.getFilteredFiles(root));
         
-        // Estimate total size
-        let totalSize = 0;
-        for (const file of selectedFiles) {
-            try {
-                const stats = fs.statSync(file);
-                totalSize += stats.size;
-            } catch (err) {
-                // Skip files that can't be accessed
-            }
-        }
-        
-        // Estimate tokens (very rough approximation)
-        const estimatedTokens = Math.ceil(totalSize / 4);
-        
-        // Update the action panel with current stats
-        actionPanelProvider.updateStats({
-            fileCount,
-            totalSize: copier.formatSize ? copier.formatSize(totalSize) : `${(totalSize / 1024).toFixed(2)} KB`,
-            totalTokens: `~${estimatedTokens.toLocaleString()}`,
-            showFullTree: includeFullTree
+        // Create the Tree View instance
+        const treeView = vscode.window.createTreeView('codebase-prompt-packer-view', {
+            treeDataProvider: treeProvider,
+            showCollapseAll: true,
+            canSelectMany: false,
+            manageCheckboxStateManually: true
         });
-    });
 
-    // NEW: When the Actions & Summary webview becomes visible, always update stats
-    vscode.window.onDidChangeVisibleTextEditors(() => {
-        // This event is not directly for webviews, so instead:
-        // Use the webviewView API to get the view and update if visible
-        const webviewView = (actionPanelProvider as any)._view as vscode.WebviewView | undefined;
-        if (webviewView && webviewView.visible) {
-            const selectedFiles = treeProvider.getSelectedFiles();
-            const includeFullTree = treeProvider.isFullTreeEnabled();
+        // Register handler for checkbox state changes in the tree view
+        if (treeView.onDidChangeCheckboxState) {
+            context.subscriptions.push(
+                treeView.onDidChangeCheckboxState((e) => treeProvider.handleCheckboxChange([e]))
+            );
+        }
+
+        // Set up callback to update stats in the action panel when selection changes
+        treeProvider.setPreviewUpdateCallback((selectedFiles, includeFullTree) => {
+            // Get file count from selected files
+            const fileCount = selectedFiles.length;
+            
+            // Estimate total size
             let totalSize = 0;
             for (const file of selectedFiles) {
                 try {
                     const stats = fs.statSync(file);
                     totalSize += stats.size;
-                } catch (err) {}
+                } catch (err) {
+                    // Skip files that can't be accessed
+                }
             }
+            
+            // Estimate tokens (very rough approximation)
             const estimatedTokens = Math.ceil(totalSize / 4);
+            
+            // Update the action panel with current stats
             actionPanelProvider.updateStats({
-                fileCount: selectedFiles.length,
+                fileCount,
                 totalSize: copier.formatSize ? copier.formatSize(totalSize) : `${(totalSize / 1024).toFixed(2)} KB`,
                 totalTokens: `~${estimatedTokens.toLocaleString()}`,
                 showFullTree: includeFullTree
             });
-        }
-    });
+        });
 
-    // Register toggle command for full project structure (updated command id)
-    context.subscriptions.push(
-        vscode.commands.registerCommand('codebasePromptPacker.toggleFullStructure', () => {
-            try {
-                treeProvider.toggleFullTree();
-                vscode.window.showInformationMessage(`Show full project structure: ${treeProvider.isFullTreeEnabled() ? 'Enabled' : 'Disabled'}`);
-            } catch (err) {
-                vscode.window.showErrorMessage('Error toggling full project structure: ' + String(err));
+        // Register all commands FIRST before any other logic
+        const commands = [
+            vscode.commands.registerCommand('codebasePromptPacker.initiatePacking', () => {
+                console.log('initiatePacking command executed');
+                return copier.copyCodebase();
+            }),
+
+            vscode.commands.registerCommand('codebasePromptPacker.copyTreeOnly', () => {
+                console.log('copyTreeOnly command executed');
+                return copier.copyTreeOnly();
+            }),
+
+            vscode.commands.registerCommand('codebasePromptPacker.openSettings', () => {
+                console.log('openSettings command executed');
+                return copier.openSettings();
+            }),
+
+            vscode.commands.registerCommand('codebasePromptPacker.refresh', () => {
+                console.log('refresh command executed');
+                return treeProvider.refresh();
+            }),
+
+            vscode.commands.registerCommand('codebasePromptPacker.selectAll', () => {
+                console.log('selectAll command executed');
+                return treeProvider.selectAll();
+            }),
+
+            vscode.commands.registerCommand('codebasePromptPacker.deselectAll', () => {
+                console.log('deselectAll command executed');
+                return treeProvider.deselectAll();
+            }),
+
+            vscode.commands.registerCommand('codebasePromptPacker.copyPackedPrompt', async () => {
+                console.log('copyPackedPrompt command executed');
+                const selectedFiles = treeProvider.getSelectedFiles();
+                const includeFullTree = treeProvider.isFullTreeEnabled();
+                await copier.processAndCopy(selectedFiles, workspaceFolder, includeFullTree);
+            }),
+
+            vscode.commands.registerCommand('codebasePromptPacker.previewPackedPrompt', async () => {
+                console.log('previewPackedPrompt command executed');
+                const selectedFiles = treeProvider.getSelectedFiles();
+                const includeFullTree = treeProvider.isFullTreeEnabled();
+                await copier.previewSelected(selectedFiles, workspaceFolder, includeFullTree);
+            }),
+
+            vscode.commands.registerCommand('codebasePromptPacker.toggleFullStructure', () => {
+                console.log('toggleFullStructure command executed');
+                try {
+                    treeProvider.toggleFullTree();
+                    vscode.window.showInformationMessage(`Show full project structure: ${treeProvider.isFullTreeEnabled() ? 'Enabled' : 'Disabled'}`);
+                } catch (err) {
+                    vscode.window.showErrorMessage('Error toggling full project structure: ' + String(err));
+                }
+            }),
+
+            vscode.commands.registerCommand('codebasePromptPacker.cancel', async () => {
+                console.log('cancel command executed');
+                treeProvider.deselectAll();
+                await vscode.commands.executeCommand('workbench.action.closeSidebar');
+                vscode.window.showInformationMessage('Selection cleared and sidebar closed.');
+            })
+        ];
+
+        // Add all commands to subscriptions
+        context.subscriptions.push(...commands);
+
+        // NEW: When the Actions & Summary webview becomes visible, always update stats
+        vscode.window.onDidChangeVisibleTextEditors(() => {
+            // This event is not directly for webviews, so instead:
+            // Use the webviewView API to get the view and update if visible
+            const webviewView = (actionPanelProvider as any)._view as vscode.WebviewView | undefined;
+            if (webviewView && webviewView.visible) {
+                const selectedFiles = treeProvider.getSelectedFiles();
+                const includeFullTree = treeProvider.isFullTreeEnabled();
+                let totalSize = 0;
+                for (const file of selectedFiles) {
+                    try {
+                        const stats = fs.statSync(file);
+                        totalSize += stats.size;
+                    } catch (err) {}
+                }
+                const estimatedTokens = Math.ceil(totalSize / 4);
+                actionPanelProvider.updateStats({
+                    fileCount: selectedFiles.length,
+                    totalSize: copier.formatSize ? copier.formatSize(totalSize) : `${(totalSize / 1024).toFixed(2)} KB`,
+                    totalTokens: `~${estimatedTokens.toLocaleString()}`,
+                    showFullTree: includeFullTree
+                });
             }
-        })
-    );
+        });
 
-    // Register all commands provided by the extension (updated command ids)
-    context.subscriptions.push(
-        vscode.commands.registerCommand('codebasePromptPacker.initiatePacking', () => copier.copyCodebase()),
-
-        vscode.commands.registerCommand('codebasePromptPacker.copyTreeOnly', () => copier.copyTreeOnly()),
-
-        vscode.commands.registerCommand('codebasePromptPacker.openSettings', () => copier.openSettings()),
-
-        vscode.commands.registerCommand('codebasePromptPacker.refresh', () => treeProvider.refresh()),
-        vscode.commands.registerCommand('codebasePromptPacker.selectAll', () => treeProvider.selectAll()),
-        vscode.commands.registerCommand('codebasePromptPacker.deselectAll', () => treeProvider.deselectAll()),
-
-        vscode.commands.registerCommand('codebasePromptPacker.copyPackedPrompt', async () => {
-            const selectedFiles = treeProvider.getSelectedFiles();
-            const includeFullTree = treeProvider.isFullTreeEnabled();
-            await copier.processAndCopy(selectedFiles, workspaceFolder, includeFullTree);
-        }),
-        vscode.commands.registerCommand('codebasePromptPacker.previewPackedPrompt', async () => {
-            const selectedFiles = treeProvider.getSelectedFiles();
-            const includeFullTree = treeProvider.isFullTreeEnabled();
-            await copier.previewSelected(selectedFiles, workspaceFolder, includeFullTree);
-        }),
-
-        vscode.commands.registerCommand('codebasePromptPacker.cancel', async () => {
-            treeProvider.deselectAll();
-            await vscode.commands.executeCommand('workbench.action.closeSidebar');
-            vscode.window.showInformationMessage('Selection cleared and sidebar closed.');
-        })
-    );
+        console.log('All commands registered successfully');
+        
+    } catch (error) {
+        console.error('Error activating Codebase Prompt Packer extension:', error);
+        vscode.window.showErrorMessage(`Failed to activate Codebase Prompt Packer: ${error}`);
+    }
 }
 
 // This method is called when your extension is deactivated

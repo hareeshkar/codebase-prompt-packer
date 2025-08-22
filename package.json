@@ -3,7 +3,7 @@
   "displayName": "Codebase Prompt Packer",
   "description": "Intelligently package your project's file tree and code into a single, clean prompt for any LLM. Craft perfect context in seconds.",
   "icon": "assets/icon.png",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "sponsor": {
     "url": "https://www.buymeacoffee.com/hareeshkarravi"
   },
@@ -18,17 +18,7 @@
 
   
   "activationEvents": [
-    "onView:codebase-prompt-packer-view",
-    "onCommand:codebasePromptPacker.initiatePacking",
-    "onCommand:codebasePromptPacker.copyTreeOnly",
-    "onCommand:codebasePromptPacker.openSettings",
-    "onCommand:codebasePromptPacker.refresh",
-    "onCommand:codebasePromptPacker.copyPackedPrompt",
-    "onCommand:codebasePromptPacker.selectAll",
-    "onCommand:codebasePromptPacker.deselectAll",
-    "onCommand:codebasePromptPacker.previewPackedPrompt",
-    "onCommand:codebasePromptPacker.cancel",
-    "onCommand:codebasePromptPacker.toggleFullStructure"
+    "*"
   ],
   "categories": [
     "Machine Learning",
@@ -41,51 +31,61 @@
       {
         "command": "codebasePromptPacker.initiatePacking",
         "title": "Pack Codebase for LLM Prompt...",
+        "category": "Codebase Prompt Packer",
         "icon": "$(package)"
       },
       {
         "command": "codebasePromptPacker.copyTreeOnly",
         "title": "Copy Directory Tree Only",
+        "category": "Codebase Prompt Packer",
         "icon": "$(list-tree)"
       },
       {
         "command": "codebasePromptPacker.openSettings",
         "title": "Configure Prompt Packer",
+        "category": "Codebase Prompt Packer",
         "icon": "$(gear)"
       },
       {
         "command": "codebasePromptPacker.refresh",
         "title": "Refresh File List",
+        "category": "Codebase Prompt Packer",
         "icon": "$(refresh)"
       },
       {
         "command": "codebasePromptPacker.copyPackedPrompt",
         "title": "Copy Packed Prompt",
+        "category": "Codebase Prompt Packer",
         "icon": "$(clippy)"
       },
       {
         "command": "codebasePromptPacker.selectAll",
         "title": "Select All",
+        "category": "Codebase Prompt Packer",
         "icon": "$(check-all)"
       },
       {
         "command": "codebasePromptPacker.deselectAll",
         "title": "Deselect All",
+        "category": "Codebase Prompt Packer",
         "icon": "$(clear-all)"
       },
       {
         "command": "codebasePromptPacker.previewPackedPrompt",
         "title": "Preview Packed Prompt",
+        "category": "Codebase Prompt Packer",
         "icon": "$(eye)"
       },
       {
         "command": "codebasePromptPacker.cancel",
         "title": "Clear Selection & Close",
+        "category": "Codebase Prompt Packer",
         "icon": "$(close)"
       },
       {
         "command": "codebasePromptPacker.toggleFullStructure",
         "title": "Show Full Project Structure",
+        "category": "Codebase Prompt Packer",
         "icon": "$(whole-word)"
       }
     ],
