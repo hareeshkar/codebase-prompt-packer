@@ -3,7 +3,7 @@
   "displayName": "Codebase Prompt Packer",
   "description": "Intelligently package your project's file tree and code into a single, clean prompt for any LLM. Craft perfect context in seconds.",
   "icon": "assets/icon.png",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "sponsor": {
     "url": "https://www.buymeacoffee.com/hareeshkarravi"
   },

@@ -821,3 +821,6 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
     // Clean up any resources if necessary
 }
+
+// Explicitly export the command for VS Code command discovery
+export const initiatePacking = activate;
