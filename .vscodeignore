@@ -1,10 +1,10 @@
 # .vscodeignore
 
-# Ignore all node_modules
-node_modules/
-
-# Ignore source files, we only need the compiled output
+# Source files (we only need the compiled output)
 src/
+
+# Keep the compiled output
+!out/
 
 # Ignore build and config files
 tsconfig.json
