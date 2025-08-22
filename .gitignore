@@ -1,0 +1,11 @@
+# Dependencies
+/node_modules
+
+# Compiled output
+/out
+*.vsix
+
+# IDE and OS files
+.vscode/
+.DS_Store
+*.log

@@ -1,0 +1,233 @@
+{
+  "name": "codebase-prompt-packer",
+  "displayName": "Codebase Prompt Packer",
+  "description": "Intelligently package your project's file tree and code into a single, clean prompt for any LLM. Craft perfect context in seconds.",
+  "icon": "assets/icon.png",
+  "version": "1.0.0",
+  "sponsor": {
+    "url": "https://www.buymeacoffee.com/hareeshkarravi"
+  },
+  "publisher": "HareeshkarRavi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hareeshkar/codebase-prompt-packer.git"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+
+  
+  "activationEvents": [
+    "onView:codebase-prompt-packer-view",
+    "onCommand:codebasePromptPacker.initiatePacking",
+    "onCommand:codebasePromptPacker.copyTreeOnly",
+    "onCommand:codebasePromptPacker.openSettings",
+    "onCommand:codebasePromptPacker.refresh",
+    "onCommand:codebasePromptPacker.copyPackedPrompt",
+    "onCommand:codebasePromptPacker.selectAll",
+    "onCommand:codebasePromptPacker.deselectAll",
+    "onCommand:codebasePromptPacker.previewPackedPrompt",
+    "onCommand:codebasePromptPacker.cancel",
+    "onCommand:codebasePromptPacker.toggleFullStructure"
+  ],
+  "categories": [
+    "Machine Learning",
+    "Programming Languages",
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codebasePromptPacker.initiatePacking",
+        "title": "Pack Codebase for LLM Prompt...",
+        "icon": "$(package)"
+      },
+      {
+        "command": "codebasePromptPacker.copyTreeOnly",
+        "title": "Copy Directory Tree Only",
+        "icon": "$(list-tree)"
+      },
+      {
+        "command": "codebasePromptPacker.openSettings",
+        "title": "Configure Prompt Packer",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "codebasePromptPacker.refresh",
+        "title": "Refresh File List",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "codebasePromptPacker.copyPackedPrompt",
+        "title": "Copy Packed Prompt",
+        "icon": "$(clippy)"
+      },
+      {
+        "command": "codebasePromptPacker.selectAll",
+        "title": "Select All",
+        "icon": "$(check-all)"
+      },
+      {
+        "command": "codebasePromptPacker.deselectAll",
+        "title": "Deselect All",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "codebasePromptPacker.previewPackedPrompt",
+        "title": "Preview Packed Prompt",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "codebasePromptPacker.cancel",
+        "title": "Clear Selection & Close",
+        "icon": "$(close)"
+      },
+      {
+        "command": "codebasePromptPacker.toggleFullStructure",
+        "title": "Show Full Project Structure",
+        "icon": "$(whole-word)"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "codebasePromptPacker.initiatePacking",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "codebasePromptPacker.initiatePacking",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "codebasePromptPacker.copyTreeOnly",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "codebasePromptPacker.openSettings"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "codebasePromptPacker.copyPackedPrompt",
+          "when": "view == codebase-prompt-packer-view",
+          "group": "navigation@1"
+        },
+        {
+          "command": "codebasePromptPacker.previewPackedPrompt",
+          "when": "view == codebase-prompt-packer-view",
+          "group": "navigation@2"
+        },
+        {
+          "command": "codebasePromptPacker.refresh",
+          "when": "view == codebase-prompt-packer-view",
+          "group": "navigation@3"
+        },
+        {
+          "command": "codebasePromptPacker.selectAll",
+          "when": "view == codebase-prompt-packer-view",
+          "group": "navigation@4"
+        },
+        {
+          "command": "codebasePromptPacker.deselectAll",
+          "when": "view == codebase-prompt-packer-view",
+          "group": "navigation@5"
+        },
+        {
+          "command": "codebasePromptPacker.cancel",
+          "when": "view == codebase-prompt-packer-view",
+          "group": "navigation@6"
+        },
+        {
+          "command": "codebasePromptPacker.toggleFullStructure",
+          "when": "view == codebase-prompt-packer-view",
+          "group": "navigation@0"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "codebasePromptPacker.selectAll",
+          "when": "view == codebase-prompt-packer-view",
+          "group": "inline"
+        },
+        {
+          "command": "codebasePromptPacker.deselectAll",
+          "when": "view == codebase-prompt-packer-view",
+          "group": "inline"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codebase-prompt-packer-container",
+          "title": "Codebase Prompt Packer",
+          "icon": "$(package)"
+        }
+      ]
+    },
+    "views": {
+      "codebase-prompt-packer-container": [
+        {
+          "id": "codebase-prompt-packer-view",
+          "name": "File Selection"
+        },
+        {
+          "id": "codebase-prompt-packer-action-view",
+          "name": "Actions & Summary",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Codebase Prompt Packer",
+      "properties": {
+        "codebasePromptPacker.ignorePatterns": {
+          "type": "array",
+          "default": [],
+          "description": "Additional glob patterns for files/folders to always ignore when packing a prompt."
+        },
+        "codebasePromptPacker.maxFileSize": {
+          "type": "number",
+          "default": 1048576,
+          "description": "Maximum size in bytes for a single file to be included in the prompt (default: 1MB)."
+        },
+        "codebasePromptPacker.outputFormat": {
+          "type": "string",
+          "enum": [
+            "markdown",
+            "xml"
+          ],
+          "default": "markdown",
+          "description": "Choose the output format for the packed prompt. XML is sometimes preferred by models like Claude."
+        },
+        "codebasePromptPacker.includeFileStats": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include file statistics (like line count and size) in the header for each file in the prompt."
+        },
+        "codebasePromptPacker.estimateTokens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show an estimated token count in the project overview header to help manage context window size."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "@types/vscode": "^1.90.0",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.2"
+  },
+  "license": "MIT"
+}

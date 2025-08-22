@@ -1,0 +1,104 @@
+name: Publish to VS Code Marketplace
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.0.1)'
+        required: true
+        default: '1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies (ensure lock file is up to date)
+        run: |
+          npm install
+          git diff --exit-code package-lock.json || (echo "package-lock.json was updated. Please commit the changes." && exit 1)
+
+      - name: Clean Install Dependencies
+        run: npm ci
+
+      - name: Lint TypeScript
+        run: |
+          npx tsc --noEmit
+        continue-on-error: false
+
+      - name: Compile TypeScript
+        run: npm run compile
+
+      - name: Verify Build Output
+        run: |
+          if [ ! -d "out" ]; then
+            echo "Build output directory 'out' not found!"
+            exit 1
+          fi
+          if [ ! -f "out/extension.js" ]; then
+            echo "Main extension file 'out/extension.js' not found!"
+            exit 1
+          fi
+          echo "Build verification successful"
+
+      - name: Install VSCE
+        run: npm install -g @vscode/vsce
+
+      - name: Verify Package Structure
+        run: |
+          echo "Verifying package.json structure..."
+          node -e "
+            const pkg = require('./package.json');
+            if (!pkg.name || !pkg.version || !pkg.main) {
+              console.error('Missing required package.json fields');
+              process.exit(1);
+            }
+            if (pkg.main !== './out/extension.js') {
+              console.error('Main entry point should be ./out/extension.js');
+              process.exit(1);  
+            }
+            console.log('Package structure verified');
+          "
+
+      - name: Package Extension
+        run: vsce package --no-update-package-json
+
+      - name: Publish to Marketplace
+        run: vsce publish --no-update-package-json -p ${{ secrets.VSCE_PAT }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Upload VSIX Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-vsix
+          path: '*.vsix'
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: '*.vsix'
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,18 @@
+# .vscodeignore
+
+# Ignore all node_modules
+node_modules/
+
+# Ignore source files, we only need the compiled output
+src/
+
+# Ignore build and config files
+tsconfig.json
+.github/
+.vscode/
+
+# Ignore git files
+.git*
+
+# Ignore test files (if you add them later)
+*.test.ts
