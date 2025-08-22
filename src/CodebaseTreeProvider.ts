@@ -25,8 +25,7 @@ export class CodebaseTreeProvider implements vscode.TreeDataProvider<FileTreeIte
 
 	public setPreviewUpdateCallback(callback: (files: string[], includeFullTree: boolean) => void): void {
 		this.previewUpdateCallback = callback;
-		// Initial update with current selection
-		this.triggerPreviewUpdate();
+		// The initial update is now handled solely by the refresh() method.
 	}
 
 	// NEW: toggle and getter for the "Show full project structure" option

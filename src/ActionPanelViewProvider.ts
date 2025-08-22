@@ -61,6 +61,12 @@ export class ActionPanelViewProvider implements vscode.WebviewViewProvider {
                 this.updateStats(this._latestStats);
             }
         });
+
+        // THE FIX: If stats were computed before this webview was created,
+        // send them now so the UI is initialized with correct values.
+        if (this._latestStats) {
+            this.updateStats(this._latestStats);
+        }
     }
 
     // Update the WebView with current selection statistics
