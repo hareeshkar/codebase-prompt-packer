@@ -1,9 +1,9 @@
 {
   "name": "codebase-prompt-packer",
-  "displayName": "Codebase Prompt Packer",
-  "description": "Intelligently package your project's file tree and code into a single, clean prompt for any LLM. Craft perfect context in seconds.",
+  "displayName": "Codebase Packer",
+  "description": "Intelligently package your project's file tree and code into a single, clean context for any LLM. Craft perfect context in seconds.",
   "icon": "assets/icon.png",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "sponsor": {
     "url": "https://www.buymeacoffee.com/hareeshkarravi"
   },
@@ -15,8 +15,6 @@
   "engines": {
     "vscode": "^1.90.0"
   },
-
-  
   "activationEvents": [
     "*"
   ],
@@ -31,62 +29,68 @@
       {
         "command": "codebasePromptPacker.initiatePacking",
         "title": "Pack Codebase for LLM Prompt...",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(package)"
       },
       {
         "command": "codebasePromptPacker.copyTreeOnly",
         "title": "Copy Directory Tree Only",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(list-tree)"
       },
       {
         "command": "codebasePromptPacker.openSettings",
         "title": "Configure Prompt Packer",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(gear)"
       },
       {
         "command": "codebasePromptPacker.refresh",
         "title": "Refresh File List",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(refresh)"
       },
       {
         "command": "codebasePromptPacker.copyPackedPrompt",
         "title": "Copy Packed Prompt",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(clippy)"
       },
       {
         "command": "codebasePromptPacker.selectAll",
         "title": "Select All",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(check-all)"
       },
       {
         "command": "codebasePromptPacker.deselectAll",
         "title": "Deselect All",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(clear-all)"
       },
       {
         "command": "codebasePromptPacker.previewPackedPrompt",
         "title": "Preview Packed Prompt",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(eye)"
       },
       {
         "command": "codebasePromptPacker.cancel",
         "title": "Clear Selection & Close",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(close)"
       },
       {
         "command": "codebasePromptPacker.toggleFullStructure",
         "title": "Show Full Project Structure",
-        "category": "Codebase Prompt Packer",
+        "category": "Codebase Packer",
         "icon": "$(whole-word)"
+      },
+      {
+        "command": "codebasePromptPacker.downloadPackedPrompt",
+        "title": "Download Packed Prompt",
+        "category": "Codebase Packer",
+        "icon": "$(download)"
       }
     ],
     "menus": {
@@ -111,51 +115,22 @@
       ],
       "view/title": [
         {
-          "command": "codebasePromptPacker.copyPackedPrompt",
-          "when": "view == codebase-prompt-packer-view",
-          "group": "navigation@1"
-        },
-        {
-          "command": "codebasePromptPacker.previewPackedPrompt",
-          "when": "view == codebase-prompt-packer-view",
-          "group": "navigation@2"
-        },
-        {
           "command": "codebasePromptPacker.refresh",
           "when": "view == codebase-prompt-packer-view",
-          "group": "navigation@3"
+          "group": "navigation",
+          "icon": "$(refresh)"
         },
         {
           "command": "codebasePromptPacker.selectAll",
           "when": "view == codebase-prompt-packer-view",
-          "group": "navigation@4"
+          "group": "navigation@2",
+          "icon": "$(check-all)"
         },
         {
           "command": "codebasePromptPacker.deselectAll",
           "when": "view == codebase-prompt-packer-view",
-          "group": "navigation@5"
-        },
-        {
-          "command": "codebasePromptPacker.cancel",
-          "when": "view == codebase-prompt-packer-view",
-          "group": "navigation@6"
-        },
-        {
-          "command": "codebasePromptPacker.toggleFullStructure",
-          "when": "view == codebase-prompt-packer-view",
-          "group": "navigation@0"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "codebasePromptPacker.selectAll",
-          "when": "view == codebase-prompt-packer-view",
-          "group": "inline"
-        },
-        {
-          "command": "codebasePromptPacker.deselectAll",
-          "when": "view == codebase-prompt-packer-view",
-          "group": "inline"
+          "group": "navigation@3",
+          "icon": "$(clear-all)"
         }
       ]
     },
@@ -163,7 +138,7 @@
       "activitybar": [
         {
           "id": "codebase-prompt-packer-container",
-          "title": "Codebase Prompt Packer",
+          "title": "Codebase Packer",
           "icon": "$(package)"
         }
       ]
@@ -182,7 +157,7 @@
       ]
     },
     "configuration": {
-      "title": "Codebase Prompt Packer",
+      "title": "Codebase Packer",
       "properties": {
         "codebasePromptPacker.ignorePatterns": {
           "type": "array",

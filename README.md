@@ -1,5 +1,4 @@
-
-# 📦 Codebase Prompt Packer
+# 📦 Codebase Packer
 
 **Transform your entire codebase into clean, AI‑ready prompts in seconds.**
 
@@ -29,41 +28,67 @@
 
 ## ✨ Key Features
 
-- **Interactive file selection**: Checkbox-enabled file tree with hierarchical parent/child selection.
-- **Smart filtering**: Automatically ignores system folders, build outputs, binaries, generated locks, and secrets.
-- **Empty-folder awareness**: Shows empty folders (and lets you include them) with an explicit `(empty)` marker.
-- **Token & size estimation**: File sizes, line counts and estimated tokens to help control AI context usage.
-- **Professional prompt output**: Clean Markdown (or optional XML) with directory trees, metadata headers and language-aware code blocks.
-- **Preview & copy**: Preview the packed prompt in a new editor tab, then copy to clipboard.
+- **Interactive file selection**: Checkbox-enabled file tree with hierarchical parent/child selection
+- **Smart filtering**: Automatically ignores system folders, build outputs, binaries, generated locks, and secrets
+- **Empty-folder awareness**: Shows empty folders with an explicit `(empty)` marker
+- **Token & size estimation**: Real-time file sizes, line counts and estimated tokens to manage AI context
+- **Professional prompt output**: Clean Markdown (or optional XML) with directory trees, metadata headers and language-aware code blocks
+- **Multiple export options**: Copy to clipboard, download as file with timestamp, or preview in editor
+- **Quick toolbar actions**: Refresh, Select All, and Deselect All buttons in the File Selection panel toolbar
+- **Enhanced error handling**: Validates files exist, handles cancellations gracefully, and provides detailed feedback
+- **Full project structure view**: Optional toggle to show complete directory tree with selected/unselected markers
 
 ---
 
 ## 🚀 Quick Start
 
-1. Install the extension from the VS Code Marketplace.
-2. Open your project folder in VS Code.
-3. Click the **📦 Codebase Prompt Packer** icon in the Activity Bar.
-4. Use the file-tree panel to check/uncheck files and directories.
-5. Click **📋 Copy Prompt** or **👁️ Preview Prompt** to export the packed prompt.
+1. **Install** the extension from the VS Code Marketplace
+2. **Open** your project folder in VS Code
+3. **Click** the **📦 Codebase Packer** icon in the Activity Bar (sidebar)
+4. **Select files** using the checkbox tree in the File Selection panel
+5. **Use toolbar buttons** (🔄 Refresh, ✅ Select All, ❌ Deselect All) for quick actions
+6. **Export your prompt**:
+   - **📋 Copy Prompt** — Copy to clipboard for AI chat
+   - **💾 Download Codebase** — Save as timestamped file (`project-name-packed-2025-11-06.md`)
+   - **👁️ Preview Prompt** — View in editor before exporting
+   - **🌳 Copy Tree Only** — Export directory structure only
 
 ---
 
 ## 🖥️ Interface
 
-**File Selection Panel**
-- Checkbox-enabled tree with partial/checked/unchecked states.
-- Expand/collapse directories and see live selection statistics.
+### **File Selection Panel**
 
-**Actions & Summary Panel**
-- Live stats: selected file count, total size, token estimate.
-- Action buttons: Copy Prompt, Preview, Copy Tree Only, Select/Deselect All.
-- Config toggles: show full project structure, adjust file size limits, add ignore patterns.
+- **Checkbox-enabled tree** with partial/checked/unchecked states for hierarchical selection
+- **Toolbar buttons** for quick access:
+  - 🔄 **Refresh** — Reload the file tree
+  - ✅ **Select All** — Check all files instantly
+  - ❌ **Deselect All** — Uncheck all files instantly
+- **Expand/collapse** directories to explore your project structure
+- **Visual indicators** for file status and folder types
+
+### **Actions & Summary Panel**
+
+- **Live statistics**:
+  - Selected file count
+  - Total size (KB/MB)
+  - Estimated token count for LLM context
+- **Export actions**:
+  - **📋 Copy Prompt** — Copy to clipboard for immediate use
+  - **💾 Download Codebase** — Save as timestamped Markdown file
+  - **👁️ Preview Prompt** — View output in editor before exporting
+  - **🌳 Copy Tree Only** — Export directory structure without file contents
+- **Quick selection**:
+  - **✅ Select All** — Check all files
+  - **❌ Deselect All** — Clear all selections
+- **Configuration toggle**:
+  - **Show full project structure** — Display complete directory tree with ✓/✗ markers for selected/unselected files
 
 ---
 
 ## 📄 Sample Generated Output
 
-Below is a GitHub-friendly example of the prompt output. *This example uses a project root named `nextshop` and demonstrates how empty folders and ignored upload folders are displayed.*
+Below is a GitHub-friendly example of the prompt output. _This example uses a project root named `nextshop` and demonstrates how empty folders and ignored upload folders are displayed._
 
 > **Note:** the directory tree uses the following markers: `✓` = included, `✗` = excluded, `📁` = folder (ignored or non-text files).
 
@@ -115,37 +140,46 @@ nextshop/
 <summary>📄 <code>src/components/Header.tsx</code> (expand)</summary>
 
 #### 📄 `src/components/Header.tsx`
-*Size: 0.9 KB | Lines: 22*
+
+_Size: 0.9 KB | Lines: 22_
 
 ```tsx
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 export const Header: React.FC = () => {
   return (
     <header className="site-header">
       <nav>
         <ul className="nav-list">
-          <li><Link href="/">Home</Link></li>
-          <li><Link href="/products">Products</Link></li>
-          <li><Link href="/cart">Cart</Link></li>
+          <li>
+            <Link href="/">Home</Link>
+          </li>
+          <li>
+            <Link href="/products">Products</Link>
+          </li>
+          <li>
+            <Link href="/cart">Cart</Link>
+          </li>
         </ul>
       </nav>
     </header>
   );
 };
 ```
+
 </details>
 
 <details>
 <summary>📄 <code>src/components/ProductCard.tsx</code> (expand)</summary>
 
 #### 📄 `src/components/ProductCard.tsx`
-*Size: 1.1 KB | Lines: 24*
+
+_Size: 1.1 KB | Lines: 24_
 
 ```tsx
-import React from 'react';
-import { formatPrice } from '../utils/formatPrice';
+import React from "react";
+import { formatPrice } from "../utils/formatPrice";
 
 type ProductCardProps = {
   name: string;
@@ -153,7 +187,11 @@ type ProductCardProps = {
   imageUrl: string;
 };
 
-export const ProductCard: React.FC<ProductCardProps> = ({ name, price, imageUrl }) => (
+export const ProductCard: React.FC<ProductCardProps> = ({
+  name,
+  price,
+  imageUrl,
+}) => (
   <div className="product-card">
     <img src={imageUrl} alt={name} />
     <h3>{name}</h3>
@@ -169,7 +207,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ name, price, imageUrl 
 <summary>📄 <code>package.json</code> (expand)</summary>
 
 #### 📄 `package.json`
-*Size: 1.4 KB | Lines: 32*
+
+_Size: 1.4 KB | Lines: 32_
 
 ```json
 {
@@ -201,13 +240,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ name, price, imageUrl 
 
 ## ⚙️ Configuration
 
-Settings are exposed through VS Code Settings (`Ctrl/Cmd + ,`) under **Codebase Prompt Packer**:
+Settings are exposed through VS Code Settings (`Ctrl/Cmd + ,`) under **Codebase Packer**:
 
-- `codebasePromptPacker.maxFileSize` — *Default:* `1048576` (1MB)
-- `codebasePromptPacker.includeFileStats` — *Default:* `true`
-- `codebasePromptPacker.estimateTokens` — *Default:* `true`
-- `codebasePromptPacker.outputFormat` — *Default:* `markdown` (`markdown` or `xml`)
-- `codebasePromptPacker.ignorePatterns` — *Default:* `[]` (array of glob patterns)
+- `codebasePromptPacker.maxFileSize` — _Default:_ `1048576` (1MB)
+- `codebasePromptPacker.includeFileStats` — _Default:_ `true`
+- `codebasePromptPacker.estimateTokens` — _Default:_ `true`
+- `codebasePromptPacker.outputFormat` — _Default:_ `markdown` (`markdown` or `xml`)
+- `codebasePromptPacker.ignorePatterns` — _Default:_ `[]` (array of glob patterns)
 
 **Example**
 
@@ -230,13 +269,30 @@ Settings are exposed through VS Code Settings (`Ctrl/Cmd + ,`) under **Codebase 
 
 ## 📋 Commands
 
-- **Pack Codebase for LLM Prompt...** — Start the packing workflow
-- **Copy Directory Tree Only** — Copy only the structure
+### **Main Commands** (Command Palette)
+
+- **Pack Codebase for LLM Prompt...** — Open the sidebar and start the packing workflow
 - **Configure Prompt Packer** — Open extension settings
-- **Refresh File List** — Re-scan workspace
-- **Copy Packed Prompt** — Copy packed files to clipboard
-- **Preview Packed Prompt** — Preview in editor
-- **Select All / Deselect All** — Quick selection
+
+### **Export Commands**
+
+- **Copy Packed Prompt** — Copy selected files to clipboard
+- **Download Packed Prompt** — Save as timestamped file (e.g., `project-packed-2025-11-06.md`)
+- **Preview Packed Prompt** — View output in editor tab before exporting
+- **Copy Directory Tree Only** — Copy structure without file contents
+
+### **Selection Commands**
+
+- **Refresh File List** — Re-scan workspace for files
+- **Select All** — Check all files in the tree
+- **Deselect All** — Uncheck all files
+- **Show Full Project Structure** — Toggle complete directory tree view
+
+### **Toolbar Actions** (File Selection Panel)
+
+- 🔄 **Refresh** — Reload file tree
+- ✅ **Select All** — Quick select all files
+- ❌ **Deselect All** — Quick deselect all files
 
 ---
 
@@ -280,23 +336,59 @@ npm run watch
 
 ## 🚀 Release Notes
 
-**v1.0.0** — Initial release
+### **v1.1.0** (Current) — Enhanced Export & Toolbar
 
-- Interactive sidebar & checkbox tree
+- ✅ **Download feature** with timestamped filenames (`project-packed-2025-11-06.md`)
+- ✅ **Toolbar buttons** in File Selection panel (Refresh, Select All, Deselect All)
+- ✅ **Enhanced error handling** with file validation and detailed error messages
+- ✅ **Post-save actions** — Option to open downloaded file immediately
+- ✅ **Improved user feedback** with icons (✅⚠️❌) and detailed statistics
+- ✅ **Multiple file formats** for download (.md, .txt, all files)
+- ✅ **Cancellation support** at all stages of processing
+- ✅ **File existence validation** before processing with user warnings
+
+### **v1.0.0** — Initial Release
+
+- Interactive sidebar with checkbox tree
 - Real-time statistics and token estimates
 - Smart file filtering and preview
+- Copy to clipboard functionality
 
 ---
 
 ## ❓ FAQ
 
-**Q:** Can the extension include empty folders?
+**Q: Can I download the packed prompt as a file?**
 
-**A:** Yes — empty folders are detected and displayed with an `(empty)` marker. You can choose to include them in the packed prompt.
+**A:** Yes! Click **💾 Download Codebase** in the Actions panel. The file will be saved with a timestamped name (e.g., `myproject-packed-2025-11-06.md`). You can choose to open it immediately after saving.
 
-**Q:** Are binary files included?
+**Q: How do I quickly select or deselect all files?**
 
-**A:** No — binary or non-text files (images, archives, videos) are treated as ignored and marked as `📁` in the tree.
+**A:** Use the toolbar buttons (✅ **Select All** or ❌ **Deselect All**) at the top of the File Selection panel, or use the same buttons in the Actions & Summary panel.
+
+**Q: Can the extension include empty folders?**
+
+**A:** Yes — empty folders are detected and displayed with an `(empty)` marker in the directory tree. They are included in the structure view.
+
+**Q: Are binary files included?**
+
+**A:** No — binary files (images, archives, videos, executables) are automatically filtered out and marked as `📁 (contains non-text or ignored files)` in the tree.
+
+**Q: What happens if files are deleted after I select them?**
+
+**A:** The extension validates file existence before processing. If files are missing, you'll see a warning message showing how many files are missing, and processing continues with the remaining valid files.
+
+**Q: Can I cancel the export process?**
+
+**A:** Yes! All export operations (Copy, Download, Preview) support cancellation. Just click the "Cancel" button on the progress notification.
+
+**Q: How do I see the complete project structure including unselected files?**
+
+**A:** Enable the **"Show full project structure"** checkbox in the Actions & Summary panel. The directory tree will show all files with ✓ (selected) and ✗ (unselected) markers.
+
+**Q: What file formats are supported for download?**
+
+**A:** You can save as Markdown (.md), Text (.txt), or any file format. The default is Markdown with proper syntax highlighting for code blocks.
 
 ---
 
@@ -313,11 +405,11 @@ MIT License — see `LICENSE` for details.
 If this project helps you, consider supporting the author:
 <br>
 <a href="https://www.buymeacoffee.com/hareeshkarravi">
-  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="180" style="margin-top: 10px;" alt="Buy Me A Coffee">
+<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="180" style="margin-top: 10px;" alt="Buy Me A Coffee">
 </a>
 
 ---
 
-💡 *Made by a student developer from Sri Lanka, passionate about open‑source and AI tools — building in public to inspire and empower others.*
+💡 _Made by a student developer from Sri Lanka, passionate about open‑source and AI tools — building in public to inspire and empower others._
 
-*Generated on: 2025-08-22*
+_Generated on: 2025-11-06_
