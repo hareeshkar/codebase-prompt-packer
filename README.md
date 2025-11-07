@@ -1,8 +1,9 @@
 # 📦 Codebase Packer
 
-**Transform your entire codebase into clean, AI‑ready prompts in seconds.**
+**Instantly convert your entire codebase into structured, LLM-ready context.**
 
-> VS Code extension that packages your project files into neatly formatted prompts for ChatGPT, Claude, Gemini,Copilot, Grok, Deepseek, Mistral, Qwen and other LLMs.
+> Turn your project into beautifully formatted, context-ready data for any AI model — in seconds.
+Works seamlessly with ChatGPT, Claude, Gemini, Copilot, Grok, DeepSeek, Mistral, Qwen, and more.
 
 ---
 
